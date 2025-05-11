@@ -1,0 +1,17 @@
+#微服务配置
+spring:
+  application:
+    name: content-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.101.65:3306/xc402_content?serverTimezone=UTC&userUnicode=true&useSSL=false&
+    username: root
+    password: mysql
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  configuration:
+    #开启驼峰转下划线
+    map-underscore-to-camel-case: true
+# 日志文件配置路径
+logging:
+  config: classpath:log4j2-dev.xml
