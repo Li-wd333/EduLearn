@@ -1,6 +1,6 @@
 spring:
   application:
-    name: content-service  #服务名content-service-dev
+    name: system-service  #服务名
   cloud:
     nacos: #配置nacos
       server-addr: 192.168.101.65:8848
