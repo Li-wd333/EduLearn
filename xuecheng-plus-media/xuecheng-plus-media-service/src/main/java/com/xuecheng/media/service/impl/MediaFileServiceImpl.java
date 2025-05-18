@@ -9,10 +9,12 @@ import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
 import com.xuecheng.base.model.RestResponse;
 import com.xuecheng.media.mapper.MediaFilesMapper;
+import com.xuecheng.media.mapper.MediaProcessMapper;
 import com.xuecheng.media.model.dto.UploadFileParamsDto;
 import com.xuecheng.media.model.dto.UploadFileResultDto;
 import com.xuecheng.media.model.dto.QueryMediaParamsDto;
 import com.xuecheng.media.model.po.MediaFiles;
+import com.xuecheng.media.model.po.MediaProcess;
 import com.xuecheng.media.service.MediaFileService;
 import io.minio.*;
 import io.minio.errors.*;
@@ -36,7 +38,9 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -52,6 +56,8 @@ public class MediaFileServiceImpl implements MediaFileService {
  MediaFilesMapper mediaFilesMapper;
  @Autowired
  private MinioClient minioClient;
+ @Autowired
+ private MediaProcessMapper mediaProcessMapper;
  @Autowired
  private MediaFileServiceImpl currentProxy;
     @Value("${minio.bucket.files}")
@@ -91,7 +97,8 @@ public class MediaFileServiceImpl implements MediaFileService {
         return mimeType;
     }
   //将文件上传到minio
- private boolean addMediaFilesToMinio(String mimeType, String bucket, String objectName, String localFilePath){
+    @Override
+    public boolean addMediaFilesToMinio(String mimeType, String bucket, String objectName, String localFilePath){
   //上传文件的参数信息
      UploadObjectArgs testbucket = null;
      try {
@@ -417,14 +424,40 @@ public class MediaFileServiceImpl implements MediaFileService {
             mediaFiles.setStatus("1");
             //保存文件信息到文件表
             int insert = mediaFilesMapper.insert(mediaFiles);
-            if (insert < 0) {
+            if (insert <= 0) {
                 log.error("保存文件信息到数据库失败,{}",mediaFiles.toString());
-                XueChengPlusException.cast("保存文件信息失败");
+//                XueChengPlusException.cast("保存文件信息失败");
+                return null;
             }
             log.debug("保存文件信息到数据库成功,{}",mediaFiles.toString());
+            //记录处理任务
+            addWaitingTask(mediaFiles);
+            return mediaFiles;
         }
         return mediaFiles;
-
+    }
+    /**
+     * 添加待处理任务
+     * @param mediaFiles 媒资文件信息
+     */
+    private void addWaitingTask(MediaFiles mediaFiles){
+        //获取文件的mimetype
+        String filename = mediaFiles.getFilename();
+        //获取扩展名
+        String fileExt = filename.substring(filename.lastIndexOf("."));
+        //获取mimeType
+        String mimeType = getMimeType(fileExt);
+        //通过文件mimetype判断是avi视频还是其他文件 是写入待处理任务
+        if("video/x-msvideo".equals(mimeType)){
+            MediaProcess mediaProcess = new MediaProcess();
+            BeanUtils.copyProperties(mediaFiles,mediaProcess);
+            mediaProcess.setStatus("1");
+            mediaProcess.setCreateDate(LocalDateTime.now());
+            mediaProcess.setUrl(null);
+            mediaProcess.setFailCount(0); //失败次数
+            //插入到media_process表
+            mediaProcessMapper.insert(mediaProcess);
+        }
     }
 
     /**

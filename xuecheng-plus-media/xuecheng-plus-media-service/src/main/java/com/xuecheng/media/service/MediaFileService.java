@@ -9,6 +9,8 @@ import com.xuecheng.media.model.dto.QueryMediaParamsDto;
 import com.xuecheng.media.model.po.MediaFiles;
 import org.springframework.context.annotation.Bean;
 
+import java.io.File;
+
 /**
  * @description 媒资文件管理业务类
  * @author Mr.M
@@ -16,7 +18,8 @@ import org.springframework.context.annotation.Bean;
  * @version 1.0
  */
 public interface MediaFileService {
-
+    //将文件上传到minio
+    boolean addMediaFilesToMinio(String mimeType, String bucket, String objectName, String localFilePath);
    /**
     * @description 媒资文件查询方法
     * @param pageParams 分页参数
@@ -66,4 +69,12 @@ public interface MediaFileService {
      * @return
      */
     public RestResponse mergechunks(Long companyId,String fileMd5,int chunkTotal,UploadFileParamsDto uploadFileParamsDto);
+
+  /**
+   * 下载文件
+   * @param bucket
+   * @param objectName
+   * @return
+   */
+  public File downloadFileFromMinIO(String bucket, String objectName);
 }

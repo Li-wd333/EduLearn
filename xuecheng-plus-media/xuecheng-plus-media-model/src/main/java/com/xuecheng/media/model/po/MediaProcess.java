@@ -14,8 +14,6 @@ import java.time.LocalDateTime;
  *
  * @author itcast
  */
-@Data
-@ToString
 @TableName("media_process")
 public class MediaProcess implements Serializable {
 
@@ -72,7 +70,125 @@ public class MediaProcess implements Serializable {
      */
     private int failCount;
 
+    public MediaProcess() {
+    }
 
+    public MediaProcess(Long id, String fileId, String filename, String bucket, String filePath, String status, LocalDateTime createDate, LocalDateTime finishDate, String url, String errormsg, int failCount) {
+        this.id = id;
+        this.fileId = fileId;
+        this.filename = filename;
+        this.bucket = bucket;
+        this.filePath = filePath;
+        this.status = status;
+        this.createDate = createDate;
+        this.finishDate = finishDate;
+        this.url = url;
+        this.errormsg = errormsg;
+        this.failCount = failCount;
+    }
 
+    @Override
+    public String toString() {
+        return "MediaProcess{" +
+                "id=" + id +
+                ", fileId='" + fileId + '\'' +
+                ", filename='" + filename + '\'' +
+                ", bucket='" + bucket + '\'' +
+                ", filePath='" + filePath + '\'' +
+                ", status='" + status + '\'' +
+                ", createDate=" + createDate +
+                ", finishDate=" + finishDate +
+                ", url='" + url + '\'' +
+                ", errormsg='" + errormsg + '\'' +
+                ", failCount=" + failCount +
+                '}';
+    }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(String fileId) {
+        this.fileId = fileId;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public String getBucket() {
+        return bucket;
+    }
+
+    public void setBucket(String bucket) {
+        this.bucket = bucket;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
+    public LocalDateTime getFinishDate() {
+        return finishDate;
+    }
+
+    public void setFinishDate(LocalDateTime finishDate) {
+        this.finishDate = finishDate;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getErrormsg() {
+        return errormsg;
+    }
+
+    public void setErrormsg(String errormsg) {
+        this.errormsg = errormsg;
+    }
+
+    public int getFailCount() {
+        return failCount;
+    }
+
+    public void setFailCount(int failCount) {
+        this.failCount = failCount;
+    }
 }

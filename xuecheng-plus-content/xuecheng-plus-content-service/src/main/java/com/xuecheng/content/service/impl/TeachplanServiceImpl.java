@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xuecheng.base.exception.XueChengPlusException;
 import com.xuecheng.content.mapper.TeachplanMapper;
 import com.xuecheng.content.mapper.TeachplanMediaMapper;
+import com.xuecheng.content.model.dto.BindTeachplanMediaDto;
 import com.xuecheng.content.model.dto.SaveTeachplanDto;
 import com.xuecheng.content.model.dto.TeachplanDto;
 import com.xuecheng.content.model.po.Teachplan;
@@ -170,6 +171,30 @@ public class TeachplanServiceImpl implements TeachplanService {
                 teachplanMapper.updateById(teachplan2);
             }
         }
+    }
+
+    /**
+     * 添加课程计划与媒资文件的关联关系
+     * @param bindTeachplanMediaDto
+     */
+    @Override
+    public void associationMedia(BindTeachplanMediaDto bindTeachplanMediaDto) {
+        //1.先删除原有的关联关系  根据课程计划的id删除
+        LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper<TeachplanMedia>()
+                .eq(TeachplanMedia::getTeachplanId,bindTeachplanMediaDto.getTeachplanId());
+        int delete = teachplanMediaMapper.delete(queryWrapper);
+        //2.添加新的关联关系
+        //2.1获取课程计划id
+        Long teachplanId = bindTeachplanMediaDto.getTeachplanId();
+        if (teachplanId == null){
+            XueChengPlusException.cast("课程计划不存在");
+        }
+        Teachplan teachplan = teachplanMapper.selectById(teachplanId);
+        TeachplanMedia teachplanMedia = new TeachplanMedia();
+        teachplanMedia.setMediaFilename(bindTeachplanMediaDto.getFileName());
+        teachplanMedia.setCourseId(teachplan.getCourseId());
+        BeanUtils.copyProperties(bindTeachplanMediaDto,teachplanMedia);
+        teachplanMediaMapper.insert(teachplanMedia);
     }
 
     /**
