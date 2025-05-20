@@ -77,4 +77,11 @@ public interface MediaFileService {
    * @return
    */
   public File downloadFileFromMinIO(String bucket, String objectName);
+
+    /**
+     * 查询媒资文件信息
+     * @param mediaId
+     * @return
+     */
+    MediaFiles getFileById(String mediaId);
 }

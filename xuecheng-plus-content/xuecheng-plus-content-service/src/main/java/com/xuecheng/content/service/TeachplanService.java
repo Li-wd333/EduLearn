@@ -43,4 +43,11 @@ public interface TeachplanService {
      * @param bindTeachplanMediaDto
      */
     void associationMedia(BindTeachplanMediaDto bindTeachplanMediaDto);
+
+    /**
+     * 接触媒资关联
+     * @param teachPlanId
+     * @param mediaId
+     */
+    void unassociationMedia(Long teachPlanId, String mediaId);
 }

@@ -382,6 +382,16 @@ public class MediaFileServiceImpl implements MediaFileService {
     }
 
     /**
+     * 查询媒资文件信息
+     * @param mediaId
+     * @return
+     */
+    @Override
+    public MediaFiles getFileById(String mediaId) {
+        return mediaFilesMapper.selectById(mediaId);
+    }
+
+    /**
      * 得到合并后的文件的地址
      * @param fileMd5 文件id即md5值
      * @param fileExt 文件扩展名

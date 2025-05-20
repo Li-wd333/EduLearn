@@ -108,9 +108,9 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         }
         //课程分类的名称
         CourseCategory mtName = courseCategoryMapper.selectById(courseBase.getMt());
-        courseBaseInfoDto.setMtName(mtName.getName());
+        courseBaseInfoDto.setMtName(mtName.getName());  //课程一级分类名称
         CourseCategory stName = courseCategoryMapper.selectById(courseBase.getSt());
-        courseBaseInfoDto.setStName(stName.getName());
+        courseBaseInfoDto.setStName(stName.getName());  //课程二级分类名称
         return courseBaseInfoDto;
     }
 

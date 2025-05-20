@@ -82,4 +82,15 @@ public class TeachplanController {
     public void associationMedia(@RequestBody BindTeachplanMediaDto bindTeachplanMediaDto){
         teachplanService.associationMedia(bindTeachplanMediaDto);
     }
+
+    /**
+     * 课程计划和媒资信息解绑
+     * @param teachPlanId
+     * @param mediaId
+     */
+    @ApiOperation(value = "课程计划和媒资信息解绑")
+    @DeleteMapping("/teachplan/association/media/{teachPlanId}/{mediaId}")
+    public void unassociationMedia(@PathVariable Long teachPlanId,@PathVariable String mediaId){
+        teachplanService.unassociationMedia(teachPlanId,mediaId);
+    }
 }

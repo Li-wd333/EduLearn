@@ -198,6 +198,28 @@ public class TeachplanServiceImpl implements TeachplanService {
     }
 
     /**
+     * 解除媒资关联关系
+     * @param teachPlanId
+     * @param mediaId
+     */
+    @Override
+    public void unassociationMedia(Long teachPlanId, String mediaId) {
+        //根据teachplanId查询
+        Teachplan teachplan = teachplanMapper.selectById(teachPlanId);
+        if (teachplan == null){
+            XueChengPlusException.cast("课程计划不存在");
+        }
+        //删除媒资关联关系
+        teachplan.setMediaType(null);
+        teachplanMapper.updateById(teachplan);
+        //删除teachplanMedia
+        LambdaQueryWrapper<TeachplanMedia> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(TeachplanMedia::getCourseId,teachplan.getCourseId());
+        queryWrapper.eq(TeachplanMedia::getTeachplanId,teachPlanId);
+        teachplanMediaMapper.delete(queryWrapper);
+    }
+
+    /**
      * 计算排序字段
      * @param courseId
      * @param parentid
