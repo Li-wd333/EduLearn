@@ -34,7 +34,7 @@ public interface MediaFileService {
      * 上传文件
      * @return
      */
-     UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath);
+     UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath,String objectName);
 
     /**
      * 查询分块

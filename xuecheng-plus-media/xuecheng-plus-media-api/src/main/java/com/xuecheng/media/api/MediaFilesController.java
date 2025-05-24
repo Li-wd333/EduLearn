@@ -38,7 +38,8 @@ public class MediaFilesController {
 
     @ApiOperation("上传文件")   // @RequestPart 获取上传的文件
     @PostMapping(value = "/upload/coursefile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public UploadFileResultDto upload(@RequestPart("filedata") MultipartFile filedata) throws IOException {
+    public UploadFileResultDto upload(@RequestPart("filedata") MultipartFile filedata,
+    @RequestParam(value= "objectName",required=false) String objectName) throws IOException {
         Long companyId = 1232141425L;
          //准备文件上传的信息
         UploadFileParamsDto uploadFileParamsDto = new UploadFileParamsDto();
@@ -56,7 +57,7 @@ public class MediaFilesController {
         //取他的文件路径
         String localFilePath = tempFile.getAbsolutePath();  // 获取临时文件的绝对路径
         //上传图片到minio
-        UploadFileResultDto uploadFileResultDto = mediaFileService.uploadFile(companyId,uploadFileParamsDto,localFilePath);
+        UploadFileResultDto uploadFileResultDto = mediaFileService.uploadFile(companyId,uploadFileParamsDto,localFilePath,objectName);
         //返回值
         return uploadFileResultDto;
     }

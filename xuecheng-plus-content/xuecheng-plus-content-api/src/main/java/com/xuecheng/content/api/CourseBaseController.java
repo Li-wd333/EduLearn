@@ -9,11 +9,13 @@ import com.xuecheng.content.model.dto.EditCourseDto;
 import com.xuecheng.content.model.dto.QueryCourseParamsDto;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.service.CourseBaseInfoService;
+import com.xuecheng.utils.SecurityUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,6 +66,11 @@ public class CourseBaseController {
     @GetMapping("/course/{courseId}")
     @ApiOperation("根据课程id查询课程信息接口")
     public CourseBaseInfoDto getCourseBaseById(@PathVariable Long courseId){
+        //获取用户信息
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        System.out.println(principal);
+        SecurityUtils.XcUser user = SecurityUtils.getUser();
+        log.info("用户信息:{}",user.getUsername());
         log.info("根据课程id查询课程信息接口,参数:{}",courseId);
         CourseBaseInfoDto courseBaseInfoDto = courseBaseInfoService.getCourseBaseInfo(courseId);
         return courseBaseInfoDto;

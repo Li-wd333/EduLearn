@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.security.InvalidKeyException;
@@ -126,7 +127,7 @@ public class MediaFileServiceImpl implements MediaFileService {
         return sdf.format(new Date()).replace("-", "/")+"/";
     }
  @Override
- public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath) {
+ public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath,String objectname) {
      //上传
      //获取文件名
      String filename = uploadFileParamsDto.getFilename();
@@ -137,7 +138,13 @@ public class MediaFileServiceImpl implements MediaFileService {
      String defaultFolderPath = getDefaultFolderPath(); //默认目录
      //文件的md5值
      String fileMd5 = getFileMd5(new File(localFilePath));
-     String objectName = defaultFolderPath+fileMd5+extension;
+     String objectName = null;
+     if (!StringUtils.isEmpty(objectname)){
+        objectName = objectname;
+     }
+     else {
+         objectName = defaultFolderPath + fileMd5 + extension;
+     }
      //文件上传到minio
      boolean result = addMediaFilesToMinio(mediaType, files, objectName, localFilePath);
      if (!result){
